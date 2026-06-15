@@ -142,7 +142,7 @@ def predict_scores(df: pd.DataFrame, models: list = None) -> np.ndarray:
     return ensemble_preds
 
 
-def predict_batch(df: pd.DataFrame) -> pd.DataFrame:
+def predict_batch(df: pd.DataFrame, models=None) -> pd.DataFrame:
     """
     Full batch prediction pipeline.
 
@@ -153,7 +153,7 @@ def predict_batch(df: pd.DataFrame) -> pd.DataFrame:
     record_id, flood_risk_score, risk_level, model_version
     """
     metadata = load_model_metadata()
-    preds = predict_scores(df)
+    preds = predict_scores(df, models=models)
 
     if ID_COL in df.columns:
         ids = df[ID_COL].values
