@@ -12,6 +12,6 @@ FloodWatch SL is an end-to-end MLOps platform for predicting flood risk scores f
 - MLflow experiment tracking
 - Deployment-ready structure
 
-## Round 1 Foundation
+## Round 1 FoundatioN
 The final system is based on our Round 1 best model:
 CatBoost Alpha Pack + drop-missing train rows.
