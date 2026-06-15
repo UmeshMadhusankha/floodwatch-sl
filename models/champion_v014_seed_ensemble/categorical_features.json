@@ -1,0 +1,12 @@
+[
+    "district",
+    "generation_date",
+    "reason_not_good_to_live",
+    "road_quality",
+    "landcover",
+    "place_name",
+    "water_supply",
+    "water_presence_flag",
+    "flood_occurrence_current_event",
+    "soil_type"
+]

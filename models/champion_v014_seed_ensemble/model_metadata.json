@@ -1,0 +1,31 @@
+{
+    "model_name": "CatBoost Alpha Pack Drop-Missing Seed Ensemble",
+    "model_version": "champion_v014_seed_ensemble",
+    "model_type": "CatBoostRegressor Ensemble",
+    "target": "flood_risk_score",
+    "id_column": "record_id",
+    "training_data": "train_dropmissing.csv",
+    "test_data": "test_dropmissing.csv",
+    "feature_count": 35,
+    "categorical_feature_count": 10,
+    "validation_method": "Target-binned StratifiedKFold",
+    "n_splits": 5,
+    "seeds": [
+        42,
+        202,
+        777,
+        2026,
+        9999
+    ],
+    "number_of_models": 25,
+    "cv_rmse": 0.23157158780580725,
+    "cv_mae": 0.17641904594511257,
+    "cv_r2": 0.04219244315562676,
+    "prediction_min": 0.3642316667609831,
+    "prediction_max": 0.6413987232314529,
+    "prediction_mean": 0.4787833620514453,
+    "prediction_std": 0.04458173599051368,
+    "round1_reference_public_score": 0.38176,
+    "status": "Production Champion",
+    "notes": "Official V014 Round 1 winning model: CatBoost Alpha Pack Drop-Missing Seed Ensemble."
+}

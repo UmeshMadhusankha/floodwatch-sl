@@ -1,0 +1,3 @@
+version,model,rows,features,cv_rmse,cv_mae,cv_r2,prediction_std,public_score,rmse_vs_v010,mae_vs_v010,r2_vs_v010,pred_std_vs_v010
+sub_v010_catboost_alpha_pack_dropmissing,Single CatBoost Alpha Pack Drop-Missing,15518,35 Alpha Pack,0.23180475883494558,0.17660570642311946,0.04023286825885215,0.044751843087494254,0.38176,0.0,0.0,0.0,0.0
+sub_v014_catboost_alpha_pack_dropmissing_seed_ensemble,"Seed Ensemble CatBoost, seeds=[42, 202, 777, 2026, 9999]",15518,35 Alpha Pack,0.23157158780580725,0.17641904594511257,0.04219244315562676,0.04458173599051368,,-0.00023317102913833487,-0.00018666047800688923,0.0019595748967746046,-0.00017010709698057208
