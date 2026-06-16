@@ -1,35 +1,35 @@
-# Step 1: Use a reliable, optimized Python base image
+# Step 1: Use the full Python 3.11 image containing built-in compilation tools
 FROM python:3.11
 
 # Step 2: Establish the working environment inside the container
 WORKDIR /workspace
 
-# Step 3: Install underlying OS dependencies required for CatBoost C-bindings 
-# and clean up cache to minimize image size
+# Step 3: Set the Python path early so script imports can find the src directory
+ENV PYTHONPATH=/workspace
+
+# Step 4: Install underlying OS dependencies required for CatBoost C-bindings 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Step 4: Copy the dependencies file first to leverage Docker layer caching
+# Step 5: Copy the dependencies file first to leverage Docker layer caching
 COPY ./api/requirements.txt .
 
-# Step 5: Install Python libraries
+# Step 6: Install Python libraries
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Step 6: Copy the modular components of your system into the container
+# Step 7: Copy all the modular components of your system into the container
 COPY api/ ./api/
 COPY src/ ./src/
 COPY models/ ./models/
 COPY scripts/ ./scripts/
 
-# Step 7: Create the data directory so SQLite has a valid path to write predictions.db
+# Step 8: Create the data directory so SQLite has a valid path to write predictions.db
 RUN mkdir -p data
 
-# Step 8: Execute the one-time artifact script to generate the .joblib transformers
-RUN python scripts/fit_transformers.py
-
-# Step 9: Make the workspace accessible to Python's module path resolution
-ENV PYTHONPATH=/workspace
+# Step 9: Execute the one-time artifact script to generate the .joblib transformers
+# We add a fallback print statement to show the exact error trace if it fails
+RUN python scripts/fit_transformers.py || (echo "ERROR: Transformation script failed. Check if train.csv data is missing in your Git repository!" && exit 1)
 
 # Step 10: Expose Render's standard web service port
 EXPOSE 10000
