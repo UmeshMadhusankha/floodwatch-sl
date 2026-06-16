@@ -1,0 +1,116 @@
+.stepper {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.step {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.step:hover {
+  background: var(--surface);
+}
+
+.marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+  background: var(--bg);
+  transition: all 0.2s ease;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.stepLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stepTitle {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* States */
+.active .marker {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.active .stepTitle {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.done .marker {
+  background: color-mix(in srgb, var(--blue) 12%, white);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* Mobile: horizontal scroll strip */
+@media (max-width: 860px) {
+  .stepper {
+    position: static;
+  }
+  .list {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 6px;
+  }
+  .step {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 76px;
+    padding: 8px 6px;
+  }
+  .text {
+    align-items: center;
+    text-align: center;
+  }
+  .stepLabel {
+    display: none;
+  }
+  .stepTitle {
+    font-size: 11px;
+  }
+}
