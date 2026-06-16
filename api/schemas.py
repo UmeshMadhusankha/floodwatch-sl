@@ -4,6 +4,44 @@ from pydantic import BaseModel
 
 
 # ============================================================
+# Forecast schemas (Task 5)
+# ============================================================
+
+class City(BaseModel):
+    name: str
+    district: str
+    lat: float
+    lng: float
+
+
+class CitiesResponse(BaseModel):
+    cities: List[City]
+
+
+class ForecastDay(BaseModel):
+    date: str
+    rainfall_mm: float
+    rainfall_7d_mm: float
+    flood_risk_score: float
+    risk_level: str
+
+
+class ForecastSummary(BaseModel):
+    max_score: float
+    max_risk_level: str
+    peak_day: str
+    avg_score: float
+    min_score: float
+
+
+class ForecastResponse(BaseModel):
+    city: str
+    district: str
+    forecast: List[ForecastDay]
+    summary: ForecastSummary
+
+
+# ============================================================
 # Root API response
 # ============================================================
 

@@ -9,12 +9,15 @@ from fastapi import FastAPI, HTTPException
 
 from api.schemas import (
     BatchPredictRequest,
+    CitiesResponse,
+    ForecastResponse,
     HealthResponse,
     ModelInfoResponse,
     PredictRequest,
     PredictResponse,
     RootResponse,
 )
+from src.forecast import generate_forecast, list_available_cities
 from src.logger import get_prediction_stats, get_recent_predictions, init_db, log_prediction
 from src.predict import load_model_metadata, load_models, predict_batch
 
@@ -180,5 +183,24 @@ def stats():
     """
     try:
         return get_prediction_stats()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Forecast endpoints (Task 5) ───────────────────────────────────────────────
+
+@app.get("/cities", response_model=CitiesResponse)
+def cities():
+    """Returns the list of cities available for forecasting."""
+    return {"cities": list_available_cities()}
+
+
+@app.get("/forecast/{city_name}", response_model=ForecastResponse)
+def forecast(city_name: str):
+    """Returns a scored 10-day flood-risk forecast for the given city."""
+    try:
+        return generate_forecast(city_name, models=_models)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
