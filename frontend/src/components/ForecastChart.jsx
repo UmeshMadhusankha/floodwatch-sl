@@ -80,7 +80,7 @@ export default function ForecastChart({ forecast }) {
   return (
     <div className={styles.wrap}>
       <ResponsiveContainer width="100%" height={300}>
-        <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+        <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 4 }}>
           <CartesianGrid stroke="#F1F5F9" vertical={false} />
 
           {/* Risk-band boundaries — subtle dashed reference lines */}
@@ -105,10 +105,11 @@ export default function ForecastChart({ forecast }) {
             yAxisId="left"
             domain={[0, 1]}
             ticks={[0, 0.3, 0.55, 0.75, 1]}
+            tickFormatter={(v) => v.toFixed(2)}
             tick={{ fontSize: 12, fill: MUTED }}
             tickLine={false}
             axisLine={{ stroke: BORDER }}
-            width={36}
+            width={44}
           />
           <YAxis
             yAxisId="right"

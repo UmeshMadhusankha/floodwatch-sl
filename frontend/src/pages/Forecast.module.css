@@ -158,6 +158,13 @@
   color: var(--text);
 }
 
+.aboutNote {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
 /* Result sections */
 .card {
   padding: 24px;
@@ -191,6 +198,20 @@
 .section {
   display: flex;
   flex-direction: column;
+}
+
+/* Inline warning shown above day cards when the AI briefing is unavailable */
+.briefingWarning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--risk-moderate);
+  background: color-mix(in srgb, var(--risk-moderate) 8%, white);
+  border: 1px solid color-mix(in srgb, var(--risk-moderate) 28%, white);
+  border-radius: 6px;
 }
 
 .dayGrid {
