@@ -15,3 +15,28 @@
   flex-shrink: 0;
   margin-top: 1px;
 }
+
+.message {
+  flex: 1;
+}
+
+.retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--risk-high);
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--risk-high) 35%, white);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+  white-space: nowrap;
+}
+
+.retry:hover {
+  background: color-mix(in srgb, var(--risk-high) 8%, white);
+}

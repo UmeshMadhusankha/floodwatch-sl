@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { Waves, MapPin, Layers, Activity } from "lucide-react";
+import { Waves, CloudRain, MapPin, Layers, Activity } from "lucide-react";
 
 import styles from "./Navbar.module.css";
 
 const links = [
   { to: "/", label: "Predict", icon: Waves, end: true },
+  { to: "/forecast", label: "Forecast", icon: CloudRain },
   { to: "/map", label: "Map", icon: MapPin },
   { to: "/batch", label: "Batch", icon: Layers },
   { to: "/monitoring", label: "Monitor", icon: Activity },

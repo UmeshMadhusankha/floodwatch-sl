@@ -12,6 +12,12 @@
   animation: spin 0.7s linear infinite;
 }
 
+/* Dark variant for light backgrounds (e.g. page loading areas) */
+.dark {
+  border-color: color-mix(in srgb, var(--navy) 18%, transparent);
+  border-top-color: var(--blue);
+}
+
 .label {
   font-size: inherit;
   color: inherit;
