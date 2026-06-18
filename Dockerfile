@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# ---> THE SECURITY FIX <---
+# Upgrade pip and lock the secure version of wheel BEFORE installing other packages
+RUN pip install --no-cache-dir --upgrade pip wheel==0.46.2 setuptools
+
 # Copy requirements and install them into a localized folder (/install)
 COPY ./api/requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
