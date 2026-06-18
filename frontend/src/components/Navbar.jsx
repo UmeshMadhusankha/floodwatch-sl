@@ -7,7 +7,6 @@ const links = [
   { to: "/predict", label: "Predict", icon: Waves },
   { to: "/forecast", label: "Forecast", icon: CloudRain },
   { to: "/map", label: "Map", icon: MapPin },
-  { to: "/batch", label: "Batch", icon: Layers },
   { to: "/monitoring", label: "Monitor", icon: Activity },
 ];
 
