@@ -41,6 +41,21 @@ class ForecastResponse(BaseModel):
     summary: ForecastSummary
 
 
+class AllForecastsCity(BaseModel):
+    city: str
+    district: str
+    lat: float
+    lng: float
+    forecast: List[ForecastDay]
+    summary: ForecastSummary
+
+
+class AllForecastsResponse(BaseModel):
+    generated_at: str
+    cache_ttl_seconds: int
+    cities: List[AllForecastsCity]
+
+
 # ============================================================
 # Briefing schemas (Task 6)
 # ============================================================

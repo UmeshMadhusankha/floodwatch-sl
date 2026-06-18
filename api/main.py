@@ -8,6 +8,7 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException
 
 from api.schemas import (
+    AllForecastsResponse,
     BatchPredictRequest,
     CitiesResponse,
     ForecastBriefingResponse,
@@ -19,7 +20,7 @@ from api.schemas import (
     RootResponse,
 )
 from src.briefing import generate_briefing
-from src.forecast import generate_forecast, list_available_cities
+from src.forecast import generate_all_forecasts, generate_forecast, list_available_cities
 from src.logger import get_prediction_stats, get_recent_predictions, init_db, log_prediction
 from src.predict import load_model_metadata, load_models, predict_batch
 
@@ -195,6 +196,15 @@ def stats():
 def cities():
     """Returns the list of cities available for forecasting."""
     return {"cities": list_available_cities()}
+
+
+@app.get("/forecast/all", response_model=AllForecastsResponse)
+def forecast_all():
+    """Returns cached 10-day forecasts for all cities (1-hour in-memory cache)."""
+    try:
+        return generate_all_forecasts(models=_models)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/forecast/{city_name}", response_model=ForecastResponse)

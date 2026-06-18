@@ -10,6 +10,7 @@ prediction so /history and /stats reflect forecast usage.
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from functools import lru_cache
 from statistics import mean
 
@@ -24,6 +25,11 @@ CITIES_PATH = ROOT_DIR / "data" / "sri_lanka_cities.json"
 DISTRICT_DEFAULTS_PATH = ROOT_DIR / "data" / "district_defaults.json"
 
 FORECAST_DAYS = 10
+
+# In-memory cache for the all-cities forecast (used by GET /forecast/all).
+CACHE_TTL_SECONDS = 3600
+_all_forecasts_cache: dict | None = None
+_all_forecasts_cached_at: datetime | None = None
 
 
 # ── Cached loaders (read from disk once, reuse) ──────────────────────────────
@@ -64,12 +70,18 @@ def _resolve_city(city_name: str) -> dict:
 
 # ── Forecast generation ──────────────────────────────────────────────────────
 
-def generate_forecast(city_name: str, models: list | None = None) -> dict:
+def generate_forecast(
+    city_name: str,
+    models: list | None = None,
+    skip_logging: bool = False,
+) -> dict:
     """
     Build and score a 10-day flood-risk forecast for a city.
 
     Returns a dict with the city, district, a per-day forecast timeline, and a
-    summary. Raises ValueError if the city is unknown.
+    summary. Raises ValueError if the city is unknown. When skip_logging is True,
+    the 10 daily predictions are not written to the database (used by the
+    all-cities forecast to avoid flooding /history).
     """
     city = _resolve_city(city_name)
     district = city["district"]
@@ -105,8 +117,9 @@ def generate_forecast(city_name: str, models: list | None = None) -> dict:
     versions = result["model_version"].tolist()
 
     # Log each daily forecast prediction (full record as input_data).
-    for i, record in enumerate(records):
-        log_prediction(record["record_id"], record, scores[i], levels[i], versions[i])
+    if not skip_logging:
+        for i, record in enumerate(records):
+            log_prediction(record["record_id"], record, scores[i], levels[i], versions[i])
 
     # Assemble the per-day timeline.
     forecast = [
@@ -136,3 +149,50 @@ def generate_forecast(city_name: str, models: list | None = None) -> dict:
         "forecast": forecast,
         "summary": summary,
     }
+
+
+# ── All-cities forecast (cached) ─────────────────────────────────────────────
+
+def generate_all_forecasts(models: list | None = None) -> dict:
+    """
+    Return 10-day forecasts for all cities, served from a 1-hour in-memory cache.
+
+    On a cache miss every city is forecast (slow); per-day predictions are NOT
+    logged (skip_logging=True) so map loads don't flood /history. Each city entry
+    includes lat/lng so the frontend can plot without a separate lookup.
+    """
+    global _all_forecasts_cache, _all_forecasts_cached_at
+
+    now = datetime.now(timezone.utc)
+    if _all_forecasts_cache is not None and _all_forecasts_cached_at is not None:
+        age = (now - _all_forecasts_cached_at).total_seconds()
+        if age < CACHE_TTL_SECONDS:
+            return _all_forecasts_cache
+
+    cities_out = []
+    for city_name, city in _load_cities_index().items():
+        fc = generate_forecast(city_name, models=models, skip_logging=True)
+        cities_out.append({
+            "city": fc["city"],
+            "district": fc["district"],
+            "lat": city["lat"],
+            "lng": city["lng"],
+            "forecast": fc["forecast"],
+            "summary": fc["summary"],
+        })
+
+    response = {
+        "generated_at": now.isoformat(),
+        "cache_ttl_seconds": CACHE_TTL_SECONDS,
+        "cities": cities_out,
+    }
+    _all_forecasts_cache = response
+    _all_forecasts_cached_at = now
+    return response
+
+
+def clear_all_forecasts_cache() -> None:
+    """Reset the all-cities forecast cache (used in testing)."""
+    global _all_forecasts_cache, _all_forecasts_cached_at
+    _all_forecasts_cache = None
+    _all_forecasts_cached_at = None

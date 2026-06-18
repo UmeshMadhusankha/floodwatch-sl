@@ -1,0 +1,75 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 28px;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.dataSource {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  padding-top: 6px;
+}
+
+.asOf {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.loadingText {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.slowHint {
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+/* Map card */
+.mapCard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+}
+
+.mapWrap {
+  position: relative;
+}
