@@ -26,7 +26,7 @@ IEEE Student Branch, University of Colombo School of Computing (UCSC).
 | Service  | URL |
 |----------|-----|
 | API (Render) | https://floodwatch-sl.onrender.com |
-| Frontend (Vercel) | `https://<your-vercel-app>.vercel.app` _(replace with the live Vercel URL)_ |
+| Frontend (Vercel) | `https://floodwatch-sl.vercel.app/` |
 
 > Note: the API runs on Render's free tier and **spins down when idle** — the first request after a
 > period of inactivity can take 30–50 seconds to wake (cold start). Subsequent requests are fast.
@@ -37,8 +37,8 @@ Quick health check: `curl https://floodwatch-sl.onrender.com/health`
 
 ## System overview
 
-**Stack:** Python · FastAPI · CatBoost · scikit-learn · pandas · React 19 · Vite · Leaflet · recharts
-· MLflow · Docker · Render · Vercel.
+**Stack:** Python · FastAPI · CatBoost · scikit-learn · pandas · PostgreSQL · React 19 · Vite ·
+Leaflet · recharts · MLflow · Docker · Render · Vercel.
 
 **Architecture (request flow):**
 
@@ -47,10 +47,10 @@ React frontend (Vercel)
         │  HTTPS (axios)
         ▼
 FastAPI service (Render, Docker)
-  ├─ /predict, /predict/batch ── feature_engineering → data_validation → predict (25-model ensemble) → SQLite log
+  ├─ /predict, /predict/batch ── feature_engineering → data_validation → predict (25-model ensemble) → Postgres log
   ├─ /forecast/{city}[/all]    ── Open-Meteo rainfall → record composition → ensemble → 1-hour cache
   ├─ /forecast/{city}/briefing ── forecast + Google Gemini natural-language briefing (graceful fallback)
-  ├─ /stats, /history          ── SQLite prediction log (powers the monitoring dashboard)
+  ├─ /stats, /history          ── PostgreSQL prediction log (powers the monitoring dashboard)
   └─ /model-info               ── champion model metadata
 ```
 
@@ -101,10 +101,13 @@ uvicorn api.main:app --reload --port 8000
 ```
 API docs: http://localhost:8000/docs
 
-Set `GEMINI_API_KEY` in a local `.env` (git-ignored) to enable the AI briefing:
+Configure a local `.env` (git-ignored):
 ```
-GEMINI_API_KEY=your_key_here
+GEMINI_API_KEY=your_key_here          # enables the AI briefing
+DATABASE_URL=postgresql://user:pass@host:5432/floodwatch   # prediction logging (Postgres)
 ```
+Prediction logging uses **PostgreSQL** (`src/logger.py`). If `DATABASE_URL` is unset, the API still
+runs and predicts — it simply skips logging (so `/history` and `/stats` stay empty locally).
 
 ### Frontend
 ```bash
@@ -127,7 +130,8 @@ python scripts/test_predict_pipeline.py
 **API → Render (Docker web service):**
 - Render builds the repo `Dockerfile` (`python:3.11`, installs `api/requirements.txt`, runs
   `scripts/fit_transformers.py` at build, serves `uvicorn api.main:app`).
-- Set the `GEMINI_API_KEY` environment variable in the Render service settings.
+- Provision a **Render PostgreSQL** instance; Render injects its `DATABASE_URL` into the service.
+- Set the `GEMINI_API_KEY` and `DATABASE_URL` environment variables in the Render service settings.
 - Auto-deploys on push to `main`.
 
 **Frontend → Vercel (static build):**
@@ -140,7 +144,7 @@ python scripts/test_predict_pipeline.py
 ## Dependencies
 
 - **Backend (runtime):** `api/requirements.txt` — fastapi, uvicorn, pydantic, catboost, numpy, pandas,
-  scikit-learn, joblib, requests, python-dotenv, google-generativeai.
+  scikit-learn, joblib, requests, python-dotenv, google-generativeai, psycopg2-binary.
 - **Full dev environment:** `requirements.txt` (includes Jupyter, matplotlib, MLflow, etc.).
 - **Frontend:** `frontend/package.json` — react, react-dom, react-router-dom, axios, leaflet,
   react-leaflet, recharts, lucide-react (build: vite, eslint).
@@ -152,6 +156,7 @@ python scripts/test_predict_pipeline.py
 | Service / Library | Purpose | Free/Paid | Where used |
 |---|---|---|---|
 | Render | API hosting (Docker web service) | Free tier | Dockerfile, live API |
+| Render PostgreSQL | Prediction logging store (`/stats`, `/history`) | Free tier | `src/logger.py` (psycopg2) |
 | Vercel | Frontend hosting | Free tier | frontend deploy |
 | Open-Meteo | 10-day rainfall forecast | Free, no key | `src/weather.py` |
 | Google Gemini | NL preparedness briefing | Free tier (quota) | `src/briefing.py` (google-generativeai) |
