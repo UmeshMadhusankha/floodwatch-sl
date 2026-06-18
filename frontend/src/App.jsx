@@ -1,22 +1,27 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+import Home from "./pages/Home";
 import Prediction from "./pages/Prediction";
 import Forecast from "./pages/Forecast";
 import BatchUpload from "./pages/BatchUpload";
 import MapPage from "./pages/MapPage";
 import Monitoring from "./pages/Monitoring";
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const mainClassName = location.pathname === "/" ? "landing-shell" : "container";
+
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
 
-      <main className="container">
+      <main className={mainClassName}>
         <Routes>
-          <Route path="/" element={<Prediction />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/predict" element={<Prediction />} />
           <Route path="/forecast" element={<Forecast />} />
           <Route path="/batch" element={<BatchUpload />} />
           <Route path="/map" element={<MapPage />} />
@@ -25,6 +30,14 @@ function App() {
       </main>
 
       <Footer />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
