@@ -1,0 +1,11 @@
+services:
+  - type: cron
+    name: floodwatch-sl-monitor-drift
+    runtime: docker
+    schedule: "0 0 * * *"
+    dockerfilePath: ./Dockerfile
+    dockerCommand: python scripts/monitor_drift.py
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        sync: false
