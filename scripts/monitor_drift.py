@@ -49,11 +49,13 @@ def main():
 
     if not common_num_features:
         print("No common numerical features found to compare.")
-        return
+        print("DRIFT_DETECTED=false")
+        return 0
 
     print(f"Performing Kolmogorov-Smirnov tests on {len(common_num_features)} features...")
     drift_detected = False
     alpha_threshold = 0.05
+    drift_findings = []
 
     for feature in common_num_features:
         # Drop NaNs to ensure ks_2samp calculations succeed
@@ -67,11 +69,19 @@ def main():
         stat, p_value = ks_2samp(baseline_vals, live_vals)
         
         if p_value < alpha_threshold:
-            print(f"🚨 DRIFT ALERT: '{feature}' distribution has drifted! (p-value: {p_value:.4e})")
+            finding = f"{feature} (p-value: {p_value:.4e})"
+            print(f"DRIFT ALERT: '{feature}' distribution has drifted! (p-value: {p_value:.4e})")
+            drift_findings.append(finding)
             drift_detected = True
 
     if not drift_detected:
         print("✅ No significant data drift detected in numerical features.")
+        print("DRIFT_DETECTED=false")
+        return 0
+
+    print("DRIFT_DETECTED=true")
+    print("DRIFT_FINDINGS=" + json.dumps(drift_findings))
+    return 1
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
