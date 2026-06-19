@@ -8,6 +8,7 @@ import Prediction from "./pages/Prediction";
 import Forecast from "./pages/Forecast";
 import MapPage from "./pages/MapPage";
 import Monitoring from "./pages/Monitoring";
+import Profile from "./pages/Profile";
 
 function AppContent() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function AppContent() {
           <Route path="/forecast" element={<Forecast />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
 

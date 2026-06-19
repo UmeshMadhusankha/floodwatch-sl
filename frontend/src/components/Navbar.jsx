@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Waves, CloudRain, MapPin, Layers, Activity, Home as HomeIcon } from "lucide-react";
+import { Waves, CloudRain, MapPin, Layers, Activity, Home as HomeIcon, User } from "lucide-react";
 
 import styles from "./Navbar.module.css";
 
@@ -15,12 +16,43 @@ const homeLinks = [
   { to: "#about", label: "About", icon: Activity },
   { to: "#services", label: "Services", icon: Layers },
   { to: "#features", label: "Features", icon: CloudRain },
-  { to: "#contact", label: "Contact", icon: MapPin },
 ];
 
 export default function Navbar() {
   const location = useLocation();
   const isHome = location.pathname === "/";
+
+  const [profile, setProfile] = useState({
+    name: "Lasal Jayasinghe",
+    avatarType: "gradient",
+    avatarValue: "linear-gradient(135deg, #185FA5 0%, #0D2137 100%)",
+  });
+
+  const loadProfile = () => {
+    const saved = localStorage.getItem("floodwatch_user_profile");
+    if (saved) {
+      try {
+        setProfile(JSON.parse(saved));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadProfile();
+    window.addEventListener("profileUpdate", loadProfile);
+    return () => window.removeEventListener("profileUpdate", loadProfile);
+  }, []);
+
+  const getInitials = (name) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
+  };
 
   return (
     <header className={styles.navbar}>
@@ -52,6 +84,29 @@ export default function Navbar() {
                   <span>{label}</span>
                 </NavLink>
               ))}
+
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              isActive ? `${styles.profileLink} ${styles.activeProfile}` : styles.profileLink
+            }
+            title={`View profile for ${profile.name}`}
+          >
+            {profile.avatarType === "gradient" ? (
+              <div
+                className={styles.navbarAvatar}
+                style={{ background: profile.avatarValue }}
+              >
+                {getInitials(profile.name)}
+              </div>
+            ) : (
+              <img
+                src={profile.avatarValue}
+                alt={profile.name}
+                className={styles.navbarAvatarImg}
+              />
+            )}
+          </NavLink>
         </nav>
       </div>
     </header>
