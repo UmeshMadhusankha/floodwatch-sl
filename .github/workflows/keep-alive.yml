@@ -1,0 +1,18 @@
+name: Keep Render Server Alive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *" # Runs every 10 minutes
+  workflow_dispatch: # Allows you to run it manually from the Actions tab
+
+jobs:
+  ping-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping FastAPI Health/Docs endpoint
+        env:
+          RENDER_URL: ${{ secrets.RENDER_URL }}
+        run: |
+          echo "Pinging FloodWatch SL backend..."
+          curl -fsS "$RENDER_URL/health" > /dev/null
+          echo "Ping successful!"
