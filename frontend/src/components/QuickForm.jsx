@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, CircleMarker, useMapEvents } from "react-leaflet";
-import { Info, Zap } from "lucide-react";
+import { ArrowLeft, Info, Zap } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
 import Input from "./Input";
@@ -25,6 +25,7 @@ export default function QuickForm({
   onChange,
   updateFields,
   onPredict,
+  onBackToPredict,
   onSwitchToExpert,
   loading,
 }) {
@@ -47,6 +48,11 @@ export default function QuickForm({
 
   return (
     <form className={styles.wrap} onSubmit={handleSubmit}>
+      <button type="button" className={styles.backToPredictBtn} onClick={onBackToPredict}>
+        <ArrowLeft size={16} strokeWidth={2.2} />
+        Back to Predict
+      </button>
+
       <div className={styles.header}>
         <h1 className={styles.title}>Quick Assessment</h1>
         <p className={styles.subtitle}>

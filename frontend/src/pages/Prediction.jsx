@@ -55,6 +55,11 @@ function Prediction() {
     setMode("select");
   };
 
+  const backToPredict = () => {
+    setError(null);
+    setMode("select");
+  };
+
   // ---- build the 33-field record per mode ----
   const coerceNumbers = (record) => {
     const out = { ...record };
@@ -123,6 +128,7 @@ function Prediction() {
             onChange={handleInputChange}
             updateFields={updateFields}
             onPredict={handlePredict}
+            onBackToPredict={backToPredict}
             onSwitchToExpert={() => setMode("expert")}
             loading={loading}
           />
@@ -140,6 +146,7 @@ function Prediction() {
             formData={formData}
             onChange={handleInputChange}
             onPredict={handlePredict}
+            onBackToPredict={backToPredict}
             loading={loading}
           />
         </>

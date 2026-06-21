@@ -8,6 +8,28 @@
   text-align: center;
 }
 
+.backToPredictBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  align-self: flex-start;
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.backToPredictBtn:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
 .title {
   font-size: 24px;
   margin-bottom: 6px;
