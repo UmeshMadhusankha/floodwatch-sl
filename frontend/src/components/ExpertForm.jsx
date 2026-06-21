@@ -9,7 +9,13 @@ import { SECTIONS } from "../data/fieldConfig";
 
 import styles from "./ExpertForm.module.css";
 
-export default function ExpertForm({ formData, onChange, onPredict, loading }) {
+export default function ExpertForm({
+  formData,
+  onChange,
+  onPredict,
+  onBackToPredict,
+  loading,
+}) {
   const [current, setCurrent] = useState(0);
   const section = SECTIONS[current];
   const isLast = current === SECTIONS.length - 1;
@@ -48,6 +54,11 @@ export default function ExpertForm({ formData, onChange, onPredict, loading }) {
 
   return (
     <div className={styles.wrap}>
+      <button type="button" className={styles.backToPredictBtn} onClick={onBackToPredict}>
+        <ArrowLeft size={16} strokeWidth={2.2} />
+        Back to Predict
+      </button>
+
       <div className={styles.header}>
         <h1 className={styles.title}>Expert Assessment</h1>
         <p className={styles.subtitle}>

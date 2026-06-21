@@ -27,12 +27,22 @@
   color: rgba(255, 255, 255, 0.68);
 }
 
-.links,
-.contact {
+.links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px 18px;
+}
+
+.contact {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.contactTitle {
+  color: #fff;
+  font-size: 15px;
 }
 
 .links a,

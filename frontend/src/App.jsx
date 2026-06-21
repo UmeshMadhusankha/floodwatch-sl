@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -22,8 +22,10 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/predict" element={<Prediction />} />
           <Route path="/forecast" element={<Forecast />} />
+          <Route path="/forcast" element={<Navigate to="/forecast" replace />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
