@@ -15,7 +15,10 @@ export default function Footer() {
           <a href="/#services">Services</a>
         </nav>
 
-        <div className={styles.contact}>
+        <section className={styles.contact} aria-label="Contact information">
+          <h3 className={styles.contactTitle}>Contact Us</h3>
+          <a href="tel:+94774267307">077 426 7307</a>
+          <a href="mailto:info@floodwatch-sl.com">info@floodwatch-sl.com</a>
           <a
             href="https://github.com/UmeshMadhusankha/floodwatch-sl"
             target="_blank"
@@ -23,7 +26,7 @@ export default function Footer() {
           >
             GitHub Repository
           </a>
-        </div>
+        </section>
 
         <p className={styles.copy}>© 2026 FloodWatch-SL. All Rights Reserved.</p>
       </div>
